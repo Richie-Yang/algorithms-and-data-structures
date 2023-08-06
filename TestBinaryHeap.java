@@ -2,31 +2,36 @@ import java.util.ArrayList;
 
 public class TestBinaryHeap {
   public static void main(String[] args) {
-    BinaryHeap heap = new BinaryHeap();
-    heap
-        .insert(30)
-        .insert(17)
-        .insert(10)
-        .insert(52)
-        .insert(100)
-        .insert(27);
-    System.out.printf("---\n");
-    System.out.printf("start\n");
-    heap.printAll();
-    heap.extractMax();
-    System.out.printf("end\n");
-    heap.printAll();
+    // BinaryHeap heap = new BinaryHeap();
+    // heap
+    // .insert(30)
+    // .insert(17)
+    // .insert(10)
+    // .insert(52)
+    // .insert(100)
+    // .insert(27);
+    // System.out.printf("---\n");
+    // System.out.printf("start\n");
+    // heap.printAll();
+    // heap.extractMax();
+    // System.out.printf("end\n");
+    // heap.printAll();
+
+    System.out.printf("---------\n");
 
     PriorityHeap pHeap = new PriorityHeap();
     pHeap
-        .enqueue("fever", 10)
-        .enqueue("cough", 13)
-        .enqueue("severe injure", 5)
-        .enqueue("broken leg", 7)
-        .enqueue("cold", 12)
-        .enqueue("mental issue", 6)
-        .dequeue();
+        .enqueue("fever", 10);
+    // .enqueue("cough", 13)
+    // .enqueue("severe injure", 5)
+    // .enqueue("broken leg", 7)
+    // .enqueue("cold", 12)
+    // .enqueue("mental issue", 6);
+
     System.out.printf("---\n");
+    pHeap.printAll();
+    PriorityNode node = pHeap.dequeue();
+    System.out.printf("dequeue node: %s\n", node.value);
     pHeap.printAll();
   }
 }
@@ -57,8 +62,8 @@ class PriorityHeap {
       valueArray.add(this.values.get(i).value);
       // System.out.printf("%s\n", this.values.get(i).value);
     }
-    System.out.printf("%s\n", priorityArray.toString());
-    System.out.printf("%s\n", valueArray.toString());
+    System.out.printf("priority %s\n", priorityArray.toString());
+    System.out.printf("value %s\n", valueArray.toString());
   }
 
   public PriorityHeap enqueue(String value, int priority) {
@@ -72,7 +77,7 @@ class PriorityHeap {
   public PriorityNode dequeue() {
     int rootIndex = 0;
     int targetIndex = this.values.size() - 1;
-    if (rootIndex == this.values.size() - 1)
+    if (this.values.size() == 0)
       return null;
 
     swap(rootIndex, targetIndex);
@@ -95,21 +100,21 @@ class PriorityHeap {
     if (leftChildNode == null && rightChildNode == null)
       return;
 
-    System.out.printf("current %d %d\n", currentIndex, currentNode.priority);
-    System.out.printf("right %d %d\n", rightChildIndex, rightChildNode.priority);
-    System.out.printf("left %d %d\n", leftChildIndex, leftChildNode.priority);
+    // System.out.printf("current %d %d\n", currentIndex, currentNode.priority);
+    // System.out.printf("right %d %d\n", rightChildIndex, rightChildNode.priority);
+    // System.out.printf("left %d %d\n", leftChildIndex, leftChildNode.priority);
 
     int overrideIndex = -1;
     PriorityNode overrideNode = null;
-    if (currentNode.priority > leftChildNode.priority && currentNode.priority > rightChildNode.priority) {
+    if (leftChildNode != null && rightChildNode != null && currentNode.priority > leftChildNode.priority
+        && currentNode.priority > rightChildNode.priority) {
       if (rightChildNode.priority > leftChildNode.priority)
         overrideIndex = rightChildIndex;
       else
         overrideIndex = leftChildIndex;
-
-    } else if (currentNode.priority > leftChildNode.priority) {
+    } else if (leftChildNode != null && currentNode.priority > leftChildNode.priority) {
       overrideIndex = leftChildIndex;
-    } else if (currentNode.priority > rightChildNode.priority) {
+    } else if (rightChildNode != null && currentNode.priority > rightChildNode.priority) {
       overrideIndex = rightChildIndex;
     }
 
@@ -123,9 +128,9 @@ class PriorityHeap {
 
   private void bubbleUp(int currentIndex, PriorityNode currentNode) {
     int parentIndex = (currentIndex - 1) / 2;
-    System.out.printf("current %d %d\n", currentIndex, currentNode.priority);
+    // System.out.printf("current %d %d\n", currentIndex, currentNode.priority);
     PriorityNode parentNode = this.values.get(parentIndex);
-    System.out.printf("parent %d %d\n", parentIndex, currentNode.priority);
+    // System.out.printf("parent %d %d\n", parentIndex, currentNode.priority);
     if (currentNode.priority >= parentNode.priority)
       return;
     swap(currentIndex, parentIndex);
@@ -136,11 +141,11 @@ class PriorityHeap {
   private void swap(int sourceIndex, int targetIndex) {
     PriorityNode sourceNode = this.values.get(sourceIndex);
     PriorityNode targetNode = this.values.get(targetIndex);
-    System.out.printf("%s\n", this.values.toString());
+    // System.out.printf("%s\n", this.values.toString());
 
     this.values.set(targetIndex, sourceNode);
     this.values.set(sourceIndex, targetNode);
-    this.printAll();
+    // this.printAll();
   }
 }
 
