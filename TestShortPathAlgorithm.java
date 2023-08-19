@@ -39,7 +39,8 @@ class SPFGraph {
     Hashtable<String, String> previousMap = spfObj.get("previousMap");
     ArrayList<String> visitedList = new ArrayList<>();
 
-    loop(fromVertex, weightMap, previousMap, visitedList);
+    // loop(fromVertex, weightMap, previousMap, visitedList);
+    classicLoop(fromVertex, weightMap, previousMap, visitedList);
 
     System.out.printf("weight: %s\n", weightMap.toString());
     System.out.printf("previous: %s\n", previousMap.toString());
@@ -62,7 +63,7 @@ class SPFGraph {
     return result;
   }
 
-  private void loop(
+  private void queueLoop(
       String vertex,
       Hashtable<String, String> weightMap,
       Hashtable<String, String> previousMap,
@@ -88,7 +89,36 @@ class SPFGraph {
     int totalWeight = getTotalWeight(
         node.value, node.priority, weightMap, previousMap);
     weightMap.put(node.value, Integer.toString(totalWeight));
-    loop(node.value, weightMap, previousMap, visitedList);
+    queueLoop(node.value, weightMap, previousMap, visitedList);
+  }
+
+  private void classicLoop(      
+      String vertex,
+      Hashtable<String, String> weightMap,
+      Hashtable<String, String> previousMap,
+      ArrayList<String> visitedList) {
+    ArrayList<Hashtable<String, String>> neighbors = this.adjacencyList.get(vertex);
+
+    String nextVertex = null;
+    for (Hashtable<String, String> neighbor : neighbors) {
+      String nodeName = neighbor.get("node");
+      String nodeWeight = neighbor.get("weight");
+      int parsedWeight = Integer.parseInt(nodeWeight);
+      if (visitedList.contains(nodeName))
+        continue;
+      int totalWeight = getTotalWeight(
+        nodeName, parsedWeight, weightMap, previousMap);
+      int currentWeight = Integer.parseInt(weightMap.get(nodeName));
+      if (totalWeight < currentWeight) {
+        weightMap.put(nodeName, nodeWeight);
+        previousMap.put(nodeName, vertex);
+        nextVertex = nodeName;
+      }
+    }
+
+    visitedList.add(vertex);
+    if (nextVertex == null) return;
+    classicLoop(nextVertex, weightMap, previousMap, visitedList);
   }
 
   private int getTotalWeight(
