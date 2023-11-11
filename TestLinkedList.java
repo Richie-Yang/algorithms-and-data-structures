@@ -195,6 +195,33 @@ class LinkedList {
     return this;
   }
 
+  public LinkedList mnReverse(Integer mValue, Integer nValue) {
+    Node currentNode = this.head;
+    Node prevNode = null, nextNode = null;
+    Node startNode = null, endNode = null;
+    Node subHead = null, subTail = null;
+    Boolean isReverse = false;
+    for (Integer i = 0; i < this.length; i++) {
+      nextNode = currentNode.next;
+      if (isReverse) currentNode.next = prevNode;
+      if (currentNode.value == mValue) {
+        isReverse = true;
+        startNode = prevNode;
+        subTail = currentNode;
+      }
+      if (currentNode.value == nValue) {
+        isReverse = false;
+        endNode = nextNode;
+        subHead = currentNode;
+      }
+      prevNode = currentNode;
+      currentNode = nextNode;
+    }
+    startNode.next = subHead;
+    subTail.next = endNode;
+    return this;
+  }
+
   private Boolean isIndexInValid(int index) {
     return index < 0 || index > this.length - 1;
   }
