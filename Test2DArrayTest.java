@@ -5,8 +5,11 @@ public class Test2DArrayTest {
   public static void main(String[] args) {
     TwoDimensionArray TdArray = new TwoDimensionArray(5, 5);
     TdArray.flatPrint();
-    ArrayList<Integer> resultArray = TdArray.dfs(0, 0);
-    System.out.printf("%s\n", resultArray.toString());
+    ArrayList<Integer> resultArray1 = TdArray.dfs(0, 0);
+    System.out.printf("%s\n", resultArray1.toString());
+
+    ArrayList<Integer> resultArray2 = TdArray.bfs(0, 0);
+    System.out.printf("%s\n", resultArray2.toString());
   }
 }
 
@@ -17,6 +20,7 @@ class TwoDimensionArray {
   Integer arrayHeight;
   Integer arrayWidth;
   ArrayList<Direction> dfsDirectionArray;
+  ArrayList<Integer[]> bfsQueue;
   Integer isSeen = 1;
   Integer notSeen = 0;
 
@@ -81,6 +85,38 @@ class TwoDimensionArray {
     if (finalPoint[0] != null && finalPoint[0] != null) dfsTraverse(finalPoint[0], finalPoint[1]);
     else return;
   }
+
+  ArrayList<Integer> bfs(Integer startHeight, Integer startWidth) {
+    this.seenArray = this.build(this.arrayHeight, this.arrayWidth, this.notSeen);
+    this.resultArray = new ArrayList<>();
+    this.bfsQueue = new ArrayList<>();
+    bfsTraverse(startHeight, startWidth, bfsQueue);
+    return this.resultArray;
+  }
+
+  void bfsTraverse(Integer heightIndex, Integer widthIndex, ArrayList<Integer[]> bfsQueue) {
+    Integer currentValue = this.getValue(this.targetArray, heightIndex, widthIndex);
+    if (currentValue == null) return;
+    if (this.resultArray.size() == 0) this.setValue(this.seenArray, heightIndex, widthIndex, this.isSeen);
+    this.resultArray.add(currentValue);
+
+    for (Direction dir : dfsDirectionArray) {
+      Integer[] point = this.getDirectionIndex(heightIndex, widthIndex, dir);
+      Integer pointValue = this.getValue(this.seenArray, point[0], point[1]);
+      Boolean isPointExist = pointValue != null;
+      if (!isPointExist) continue;
+      Boolean isPointSeen = pointValue == 1;
+      if (isPointSeen) continue;
+      this.setValue(this.seenArray, point[0], point[1], this.isSeen);
+      bfsQueue.add(point);
+    }
+    if (bfsQueue.size() > 0) {
+      Integer[] firstPoint = bfsQueue.removeFirst();
+      bfsTraverse(firstPoint[0], firstPoint[1], bfsQueue);
+    }
+    else return;
+  }
+
 
   private Integer[] getDirectionIndex(Integer heightIndex, Integer widthIndex, Direction dir) {
     Direction direction = dir;
