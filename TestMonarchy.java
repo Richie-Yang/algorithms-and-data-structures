@@ -16,7 +16,7 @@ public class TestMonarchy {
 interface Monarchy {
   void birth(String child, String parent);
   void death(String name);
-  // ArrayList<String> getOrderOfSuccession();
+  ArrayList<String> getOrderOfSuccession();
 }
 
 class Kingdom implements Monarchy {
